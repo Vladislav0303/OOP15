@@ -27,6 +27,7 @@ public class Main {
                     case 2:
                         System.out.print("Введіть тип посилки (Одежа, Електроніка, Документи): ");
                         String type = sc.nextLine();
+                        sc.nextLine();
                         System.out.print("Введіть вагу (кг): ");
                         double weight = sc.nextDouble();
                         System.out.print("Введіть адресу отримувача: ");
@@ -37,6 +38,7 @@ public class Main {
                     case 3:
                         System.out.print("Введіть індекс посилки для зміни статусу (починаючи з 0): ");
                         int index = sc.nextInt();
+                        sc.nextLine();
                         System.out.print("Введіть новий статус (оформлено / у дорозі / доставлено): ");
                         String status = sc.nextLine();
                         storage.updateParcelStatus(index, status);

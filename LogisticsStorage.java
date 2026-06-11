@@ -95,6 +95,8 @@ public class LogisticsStorage implements Serializable {
             if (parcel.getAssignedCourier() != null) {
                 parcel.getAssignedCourier().setFree(true);
                 notifyObservers("Кур'єр " + parcel.getAssignedCourier().getName() + " успішно виконав доставку та звільнився.");
+                System.out.println("Кур'єр " + parcel.getAssignedCourier().getName() + " успішно виконав доставку та звільнився.");
+
             }
         }
     }
@@ -111,6 +113,7 @@ public class LogisticsStorage implements Serializable {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             LogisticsMemento memento = this.saveState();
             oos.writeObject(memento);
+            System.out.println("Все збережено у файл");
             notifyObservers("Контрольну точку успішно записано у файл: " + filename);
         } catch (Exception e) {
             throw new LogisticsException("Помилка серіалізації стану: " + e.getMessage());
@@ -119,9 +122,16 @@ public class LogisticsStorage implements Serializable {
     public void loadFromFile(String filename) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             LogisticsMemento memento = (LogisticsMemento) ois.readObject();
-            this.restoreState(memento);
+            restoreState(memento);
+            System.out.println("\n=== ВІДНОВЛЕНІ ПОСИЛКИ ===");
+            for (int i = 0; i < memento.getSavedParcels().size(); i++) {
+                Parcel p = (Parcel) memento.getSavedParcels().get(i);
+                System.out.println(" #" + (i + 1) + " [" + p.getType() + "] Вага: " + p.getWeight() + "кг | Адреса: " + p.getAddress());
+            }
+            System.out.println("Стан десеріалізовано з файлу.");
+
         } catch (Exception e) {
-            throw new LogisticsException("Помилка десеріалізації: файл не знайдено або пошкоджено! " + e.getMessage());
+            System.out.println("Не вдалося завантажити збереження: " + e.getMessage());
         }
     }
     public void printStatus() {
